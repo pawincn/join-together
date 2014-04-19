@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans xsd/spring-beans-4.0.xsd
+                           http://www.springframework.org/schema/context xsd/spring-context-4.0.xsd">
+
+    <import resource="persistence.xml" />
+
+    <context:property-placeholder location="classpath*:service.properties" />
+
+    <bean id="entityDao" class="com.bwang.join.dao.EntityDao">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="restfulService" class="com.bwang.join.service.impl.RestfulServiceImpl">
+        <property name="entityDao" ref="entityDao"/>
+    </bean>
+
+</beans>

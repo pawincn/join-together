@@ -1,16 +1,24 @@
 package com.bwang.join.dao.entity;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * User: Brian Wang
  * Time: 1/8/14 11:20 PM
  */
 @Entity
-@Table(name = "participants")
-public class Participant extends AbstractEntity {
+@Table(name = "users")
+public class User extends AbstractEntity {
     @Column(name = "nick_name")
     private String nickName;
     @Column(name = "first_name")
@@ -29,6 +37,30 @@ public class Participant extends AbstractEntity {
     private String wechatId;
     @Column(name = "weibo_id")
     private String weiboId;
+
+    @ManyToMany
+    @Fetch(FetchMode.JOIN)  // todo default the value later
+    @JoinTable(
+            name = "user_group_xref",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "group_id")
+    )
+    private Set<UserGroup> groups;
+
+    public Set<UserGroup> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(Set<UserGroup> groups) {
+        this.groups = groups;
+    }
+
+    public void addGroup(UserGroup group) {
+        if (this.groups == null) {
+            this.groups = new HashSet<UserGroup>();
+        }
+        this.groups.add(group);
+    }
 
     public Integer getAge() {
         return age;

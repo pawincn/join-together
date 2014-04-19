@@ -1,8 +1,19 @@
 package com.bwang.join.service;
 
-import com.bwang.join.dao.entity.Participant;
+import com.bwang.join.dao.entity.Activity;
+import com.bwang.join.dao.entity.ActivityLocation;
+import com.bwang.join.dao.entity.ActivityRecurringSetting;
+import com.bwang.join.dao.entity.ActivityRestriction;
+import com.bwang.join.dao.entity.User;
+import com.bwang.join.dao.entity.UserGroup;
 import com.bwang.join.util.BeanHelper;
+import org.joda.time.DateTime;
 import org.junit.Test;
+
+import java.util.Date;
+import java.util.Set;
+
+import static org.junit.Assert.*;
 
 /**
  * User: Brian Wang
@@ -10,17 +21,106 @@ import org.junit.Test;
  */
 public class RestfulServiceTestCase {
     private RestfulService service;
+    private final static String TEST_USER_EMAIL = "pawincn@gmail.com";
+    private final static String TEST_GROUP_NAME = "badminton";
+    private final static String TEST_ACTIVITY_TITLE = "Run for health around community";
 
     public RestfulServiceTestCase() {
         service = (RestfulService) BeanHelper.getBean("restfulService");
     }
 
     @Test
-    public void testSaveParticipant() {
-        Participant entity = new Participant();
-        entity.setFirstName("Dou");
-        entity.setLastName("Wang");
-        entity.setEmail("pawincn@gmail.com");
-        service.saveParticipant(entity);
+    public void testSaveUser() {
+        User user = new User();
+        user.setFirstName("Dou");
+        user.setLastName("Wang");
+        user.setEmail(TEST_USER_EMAIL);
+        service.saveUser(user);
     }
+
+    @Test
+    public void testFindUserByEmail() {
+        User user = service.findUserByEmail(TEST_USER_EMAIL);
+        assertEquals(TEST_USER_EMAIL, user.getEmail());
+
+        Set<UserGroup> groups = user.getGroups();
+        assertNotNull(groups);
+    }
+
+    @Test
+    public void testSaveGroup() {
+        UserGroup group = new UserGroup();
+        group.setGroupName(TEST_GROUP_NAME);
+        service.saveUserGroup(group);
+    }
+
+    @Test
+    public void testFindGroup() {
+        UserGroup group = service.findUserGroupByName(TEST_GROUP_NAME);
+        assertEquals(TEST_GROUP_NAME, group.getGroupName());
+    }
+
+    @Test
+    public void testSaveUserGroupRelationship() {
+        User user = service.findUserByEmail(TEST_USER_EMAIL);
+        UserGroup group = service.findUserGroupByName(TEST_GROUP_NAME);
+        user.addGroup(group);
+        service.saveUser(user);
+    }
+
+    @Test
+    public void testSaveActivityRestriction() {
+        ActivityRestriction restriction = new ActivityRestriction();
+        restriction.setDistance(1);
+        restriction.setMaxAge(60);
+        restriction.setMinAge(16);
+        restriction.setParticipantCountMax(100);
+        restriction.setParticipantGender(ActivityRestriction.GenderEnum.Female);
+        restriction.setStartTime(new Date());
+//        restriction.setStartTime(DateTime.now().plusHours(1));
+        service.saveActivityRestriction(restriction);
+    }
+
+    @Test
+    public void testSaveActivityRecurringSetting() {
+        ActivityRecurringSetting setting = new ActivityRecurringSetting();
+        setting.setMonday(true);
+        setting.setStartTime("12:00");
+        setting.setRecurringEnd(new Date());
+        service.saveActivityRecurringSetting(setting);
+    }
+
+    @Test
+    public void testSaveActivityLocation() {
+        ActivityLocation location = new ActivityLocation();
+        location.setLatitude(30.0000);
+        location.setLongitude(120.0000);
+        location.setAddress("LOTUS COMMUNITY");
+        service.saveActivityLocation(location);
+    }
+
+    @Test
+    public void testSaveActivity() {
+        Activity activity = new Activity();
+        activity.setTitle(TEST_ACTIVITY_TITLE);
+        activity.setDescription("Go outdoor and run with your family.");
+
+        ActivityRestriction restriction = new ActivityRestriction();
+        restriction.setDistance(1);
+        restriction.setStartTime(new Date());
+        service.saveActivityRestriction(restriction);
+        activity.setRestriction(restriction);
+
+        ActivityLocation location = new ActivityLocation();
+        location.setLatitude(33.0000);
+        location.setLongitude(120.0000);
+        service.saveActivityLocation(location);
+        activity.setLocation(location);
+
+        User organizer = service.findUserByEmail(TEST_USER_EMAIL);
+        activity.setOrganizer(organizer);
+
+        service.saveActivity(activity);
+    }
+
 }

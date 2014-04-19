@@ -1,7 +1,8 @@
 package com.bwang.join.dao;
 
-import com.bwang.join.dao.entity.Participant;
+import com.bwang.join.dao.entity.User;
 import com.bwang.join.util.BeanHelper;
+import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -17,8 +18,9 @@ public class EntityDaoTestCase {
     }
 
     @Test
+    @Ignore
     public void testSave() {
-        Participant entity = new Participant();
+        User entity = new User();
         entity.setId(2l);
         entity.setFirstName("Brian");
         entity.setLastName("Wang");
@@ -27,7 +29,8 @@ public class EntityDaoTestCase {
     }
 
     @Test
+    @Ignore
     public void testFindById() {
-        dao.findById(Participant.class, 1l);
+        dao.findById(User.class, 1l);
     }
 }

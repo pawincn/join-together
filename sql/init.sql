@@ -4,7 +4,7 @@ create database join_together;
 
 use join_together;
 
-create table participants
+create table users
 (
   id bigint primary key auto_increment,
   nick_name varchar (50),
@@ -18,19 +18,44 @@ create table participants
   weibo_id varchar (50)
 );
 
-create table participant_footprints
+create table user_footprints
 (
   id bigint primary key auto_increment,
   longitude decimal (9,6),
   latitude decimal (9,6),
-  participant_id bigint,
-  foreign key (participant_id) references participants(id)
+  user_id bigint,
+  foreign key (user_id) references users(id)
+);
+
+create table user_friend_xref
+(
+  id bigint primary key auto_increment,
+  user_id bigint,
+  friend_id bigint,
+  foreign key (user_id) references users(id),
+  foreign key (friend_id) references users(id)
+);
+
+create table user_groups
+(
+  id bigint primary key auto_increment,
+  group_name varchar(100),
+  group_desc varchar(500)
+);
+
+create table user_group_xref
+(
+  id bigint primary key auto_increment,
+  group_id bigint,
+  user_id bigint,
+  foreign key (group_id) references user_groups(id),
+  foreign key (user_id) references users(id)
 );
 
 create table activity_recurring_settings
 (
   id bigint primary key auto_increment,
-  start_time time,
+  start_time char(8),
   recurring_end datetime,
   monday bool,
   tuesday bool,
@@ -51,8 +76,18 @@ create table activity_restrictions
   age_range_max int default 100,
   start_in_minutes int default 30,
   start_at_datetime datetime,
-  recurring_setting_id bigint,
-  foreign key (recurring_setting_id) references activity_recurring_settings(id)
+  recurring_setting_id bigint
+#   foreign key (recurring_setting_id) references activity_recurring_settings(id)
+);
+
+create table activity_location
+(
+  id bigint primary key auto_increment,
+  longitude decimal(9,6),
+  latitude decimal(9,6),
+  address varchar(100),
+  city varchar(20),
+  country varchar(10)
 );
 
 create table activities
@@ -61,7 +96,9 @@ create table activities
   title varchar (200),
   description varchar (1000),
   restriction_id bigint,
-  foreign key (restriction_id) references activity_restrictions(id)
+  location_id bigint,
+  organizer_id bigint
+#   foreign key (restriction_id) references activity_restrictions(id)
 );
 
 create table activity_tags
@@ -84,24 +121,39 @@ create table activity_participant_xref
   id bigint primary key auto_increment,
   activity_id bigint,
   participant_id bigint,
-  linking_time datetime,
-  isOrganizer bool
+  participate_time datetime,
+  foreign key (activity_id) references activities(id),
+  foreign key (participant_id) references users(id)
+);
+
+create table activity_invitees
+(
+  id bigint primary key auto_increment,
+  activity_id bigint,
+  invitee_id bigint,
+  group_id bigint,
+  invite_time datetime,
+  foreign key (activity_id) references activities(id)
+#   foreign key (invitee_id) references user(id)
 );
 
 create table messages
 (
   id bigint primary key auto_increment,
   message varchar (200),
-  sent_time datetime,
-  isSent bool,
-  isReceived bool,
+  send_time datetime,
+  sender_id bigint,
   activity_id bigint,
-  foreign key (activity_id) references activities(id)
+  foreign key (sender_id) references users(id)
+#   foreign key (activity_id) references activities(id)
 );
 
-create table message_participant_xref
+create table message_receivers
 (
   id bigint primary key auto_increment,
-  participant_id bigint,
-  from_to bool
+  receiver_id bigint,
+  message_id bigint,
+  is_read tinyint,
+  foreign key (receiver_id) references users(id),
+  foreign key (message_id) references messages(id)
 );
