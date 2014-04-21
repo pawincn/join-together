@@ -51,6 +51,7 @@ create table user_group_xref
   foreign key (group_id) references user_groups(id),
   foreign key (user_id) references users(id)
 );
+create unique index user_group_xref_unique_index on user_group_xref(user_id, group_id);
 
 create table activity_recurring_settings
 (
@@ -116,25 +117,27 @@ create table activity_tag_xref
   foreign key (tag_id) references activity_tags(id)
 );
 
-create table activity_participant_xref
+create table activity_joiners
 (
   id bigint primary key auto_increment,
   activity_id bigint,
-  participant_id bigint,
-  participate_time datetime,
+  joiner_id bigint,
+  join_time datetime,
   foreign key (activity_id) references activities(id),
-  foreign key (participant_id) references users(id)
+  foreign key (joiner_id) references users(id)
 );
+create unique index activity_joiners_unique_index on activity_joiners(activity_id, joiner_id);
 
 create table activity_invitees
 (
   id bigint primary key auto_increment,
   activity_id bigint,
   invitee_id bigint,
-  group_id bigint,
+  invited_group_id bigint,
   invite_time datetime,
-  foreign key (activity_id) references activities(id)
-#   foreign key (invitee_id) references user(id)
+  foreign key (activity_id) references activities(id),
+  foreign key (invitee_id) references users(id),
+  foreign key (invited_group_id) references user_groups(id)
 );
 
 create table messages

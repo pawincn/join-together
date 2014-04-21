@@ -10,7 +10,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -37,8 +37,12 @@ public class EntityDao {
         getSession().saveOrUpdate(entity);
     }
 
-    public Object findById(Class clazz, Long id) {
-        return getSession().get(clazz, id);
+    /**
+     * Get always hit DB, load just return a fake instance with given id.
+     * Also parametrize the class type.
+     */
+    public <T> T findById(Class<T> clazz, Long id) {
+        return (T) getSession().get(clazz, id);
     }
 
     public User findUserByEmail(String email) {
@@ -47,12 +51,18 @@ public class EntityDao {
         return CollectionUtils.isEmpty(users) ? null : users.get(0);
     }
 
-    public Set<UserGroup> findUserGroups(String email) {
-        Session session = getSession();
-        List<User> users = session.createCriteria(User.class)
-                .add(Restrictions.eq("email", email)).list();
-        User user = CollectionUtils.isEmpty(users) ? null : users.get(0);
-        return user == null ? null : user.getGroups();
+    public Set<UserGroup> findUserGroupsByUserEmail(String email) {
+        User user = findUserByEmail(email);
+        List<UserGroupRef> groupRefs = getSession().createCriteria(UserGroupRef.class)
+                .add(Restrictions.eq("user", user)).list();
+        Set<UserGroup> groups = null;
+        if (!CollectionUtils.isEmpty(groupRefs)) {
+            groups = new HashSet<>();
+            for (UserGroupRef ref : groupRefs) {
+                groups.add(ref.getGroup());
+            }
+        }
+        return groups;
     }
 
     public UserGroup findUserGroupByName(String groupName) {
@@ -61,9 +71,13 @@ public class EntityDao {
         return CollectionUtils.isEmpty(groups) ? null : groups.get(0);
     }
 
-    public List<Activity> findActivityByTitle(String activityTitle) {
+    public List<Activity> findActivitiesByTitle(String activityTitle) {
         List<Activity> activities = getSession().createCriteria(Activity.class)
                 .add(Restrictions.eq("title", activityTitle)).list();
-        return activities == null ? new ArrayList<Activity>(0) : activities;
+        return activities;
+    }
+
+    public List<User> findActivityParticipants(Activity activity) {
+        return null;
     }
 }

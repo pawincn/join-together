@@ -11,6 +11,7 @@ import com.bwang.join.util.BeanHelper;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -48,9 +49,6 @@ public class RestfulServiceTestCase {
         User user = service.findUserByEmail(TEST_USER_EMAIL);
         assertEquals(TEST_USER_EMAIL, user.getEmail());
 
-        Set<UserGroup> groups = service.findUserGroups(TEST_USER_EMAIL);
-        assertNotNull(groups);
-        logger.debug("group's size: " + groups.size());
     }
 
     @Test
@@ -66,13 +64,20 @@ public class RestfulServiceTestCase {
         assertEquals(TEST_GROUP_NAME, group.getGroupName());
     }
 
-    @Test
     // depends on the fetch mode of user's groups, this case works in JOIN mode of many-to-many.
+    /*@Test
     public void testSaveUserGroupRelationship() {
         User user = service.findUserByEmail(TEST_USER_EMAIL);
         UserGroup group = service.findUserGroupByName(TEST_GROUP_NAME);
         user.addGroup(group);
         service.saveUser(user);
+    }*/
+
+    @Test
+    public void testFindUserGroups() {
+        Set<UserGroup> groups = service.findUserGroupsByUserEmail(TEST_USER_EMAIL);
+        assertNotNull(groups);
+        logger.info("group's size: " + groups.size());
     }
 
     @Test
@@ -139,8 +144,11 @@ public class RestfulServiceTestCase {
     }
 
     @Test
-    public void testFindActivity() {
-        List<Activity> activityList = service.findActivityByTitle(TEST_ACTIVITY_TITLE);
+    public void testFindActivities() {
+        List<Activity> activityList = service.findActivitiesByTitle(TEST_ACTIVITY_TITLE);
+        if (CollectionUtils.isEmpty(activityList)) {
+            return;
+        }
         for (Activity activity : activityList) {
             assertNotNull(activity);
             assertNotNull(activity.getLocation());

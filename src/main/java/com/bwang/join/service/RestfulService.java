@@ -20,16 +20,15 @@ public interface RestfulService {
     public User findUserByEmail(String email);
     public void saveUserGroup(UserGroup group);
     public UserGroup findUserGroupByName(String groupName);
-    public Set<UserGroup> findUserGroups(String email);
+    public Set<UserGroup> findUserGroupsByUserEmail(String email);
     public void saveUserGroupRef(UserGroupRef ref);
 
     public void saveActivityRecurringSetting(ActivityRecurringSetting setting);
     public void saveActivityRestriction(ActivityRestriction restriction);
     public void saveActivityLocation(ActivityLocation location);
     public void saveActivity(Activity activity);
-    public List<Activity> findActivityByTitle(String activityName);
-
-    public List<User> listParticipants();
+    public List<Activity> findActivitiesByTitle(String activityName);
+    public List<User> findActivityParticipants(Long activityId);
 
     public void sendMessage();
 }

@@ -51,8 +51,8 @@ public class RestfulServiceImpl implements RestfulService {
 
     @Override
     @Transactional(readOnly = true)
-    public Set<UserGroup> findUserGroups(String email) {
-        return entityDao.findUserGroups(email);
+    public Set<UserGroup> findUserGroupsByUserEmail(String email) {
+        return entityDao.findUserGroupsByUserEmail(email);
     }
 
     @Override
@@ -87,13 +87,14 @@ public class RestfulServiceImpl implements RestfulService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Activity> findActivityByTitle(String activityName) {
-        return entityDao.findActivityByTitle(activityName);
+    public List<Activity> findActivitiesByTitle(String activityTitle) {
+        return entityDao.findActivitiesByTitle(activityTitle);
     }
 
     @Override
-    public List<User> listParticipants() {
-        return null;
+    public List<User> findActivityParticipants(Long activityId) {
+        Activity activity = entityDao.findById(Activity.class, activityId);
+        return entityDao.findActivityParticipants(activity);
     }
 
     @Override
