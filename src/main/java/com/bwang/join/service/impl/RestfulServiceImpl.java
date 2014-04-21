@@ -7,10 +7,12 @@ import com.bwang.join.dao.entity.ActivityRecurringSetting;
 import com.bwang.join.dao.entity.ActivityRestriction;
 import com.bwang.join.dao.entity.User;
 import com.bwang.join.dao.entity.UserGroup;
+import com.bwang.join.dao.entity.UserGroupRef;
 import com.bwang.join.service.RestfulService;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * User: Brian Wang
@@ -48,6 +50,18 @@ public class RestfulServiceImpl implements RestfulService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public Set<UserGroup> findUserGroups(String email) {
+        return entityDao.findUserGroups(email);
+    }
+
+    @Override
+    @Transactional
+    public void saveUserGroupRef(UserGroupRef ref) {
+        entityDao.save(ref);
+    }
+
+    @Override
     @Transactional
     public void saveActivityRecurringSetting(ActivityRecurringSetting setting) {
         entityDao.save(setting);
@@ -73,8 +87,8 @@ public class RestfulServiceImpl implements RestfulService {
 
     @Override
     @Transactional(readOnly = true)
-    public Activity findActivityByName(String activityName) {
-        return entityDao.findActivityByName(activityName);
+    public List<Activity> findActivityByTitle(String activityName) {
+        return entityDao.findActivityByTitle(activityName);
     }
 
     @Override

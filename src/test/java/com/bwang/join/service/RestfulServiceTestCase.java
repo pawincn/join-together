@@ -6,11 +6,14 @@ import com.bwang.join.dao.entity.ActivityRecurringSetting;
 import com.bwang.join.dao.entity.ActivityRestriction;
 import com.bwang.join.dao.entity.User;
 import com.bwang.join.dao.entity.UserGroup;
+import com.bwang.join.dao.entity.UserGroupRef;
 import com.bwang.join.util.BeanHelper;
-import org.joda.time.DateTime;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.*;
@@ -20,6 +23,8 @@ import static org.junit.Assert.*;
  * Time: 2/2/14 10:05 PM
  */
 public class RestfulServiceTestCase {
+    private static Logger logger = LoggerFactory.getLogger(RestfulServiceTestCase.class);
+
     private RestfulService service;
     private final static String TEST_USER_EMAIL = "pawincn@gmail.com";
     private final static String TEST_GROUP_NAME = "badminton";
@@ -43,8 +48,9 @@ public class RestfulServiceTestCase {
         User user = service.findUserByEmail(TEST_USER_EMAIL);
         assertEquals(TEST_USER_EMAIL, user.getEmail());
 
-        Set<UserGroup> groups = user.getGroups();
+        Set<UserGroup> groups = service.findUserGroups(TEST_USER_EMAIL);
         assertNotNull(groups);
+        logger.debug("group's size: " + groups.size());
     }
 
     @Test
@@ -61,11 +67,20 @@ public class RestfulServiceTestCase {
     }
 
     @Test
+    // depends on the fetch mode of user's groups, this case works in JOIN mode of many-to-many.
     public void testSaveUserGroupRelationship() {
         User user = service.findUserByEmail(TEST_USER_EMAIL);
         UserGroup group = service.findUserGroupByName(TEST_GROUP_NAME);
         user.addGroup(group);
         service.saveUser(user);
+    }
+
+    @Test
+    public void testSaveUserGroupRef() {
+        User user = service.findUserByEmail(TEST_USER_EMAIL);
+        UserGroup group = service.findUserGroupByName(TEST_GROUP_NAME);
+        UserGroupRef ref = new UserGroupRef(user, group);
+        service.saveUserGroupRef(ref);
     }
 
     @Test
@@ -121,6 +136,17 @@ public class RestfulServiceTestCase {
         activity.setOrganizer(organizer);
 
         service.saveActivity(activity);
+    }
+
+    @Test
+    public void testFindActivity() {
+        List<Activity> activityList = service.findActivityByTitle(TEST_ACTIVITY_TITLE);
+        for (Activity activity : activityList) {
+            assertNotNull(activity);
+            assertNotNull(activity.getLocation());
+            assertNotNull(activity.getRestriction());
+            assertNotNull(activity.getOrganizer());
+        }
     }
 
 }

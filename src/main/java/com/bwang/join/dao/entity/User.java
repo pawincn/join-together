@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.HashSet;
 import java.util.Set;
@@ -38,16 +39,35 @@ public class User extends AbstractEntity {
     @Column(name = "weibo_id")
     private String weiboId;
 
-    @ManyToMany
-    @Fetch(FetchMode.JOIN)  // todo default the value later
+    /*@ManyToMany
+    @Fetch(FetchMode.SELECT)  // todo default the value later
     @JoinTable(
             name = "user_group_xref",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "group_id")
     )
-    private Set<UserGroup> groups;
+    private Set<UserGroup> groups;*/
 
-    public Set<UserGroup> getGroups() {
+    @OneToMany(mappedBy = "user")
+    @Fetch(FetchMode.SELECT)
+    private Set<UserGroupRef> groupRefs;
+
+    public Set<UserGroupRef> getGroupRefs() {
+        return groupRefs;
+    }
+
+    public void setGroupRefs(Set<UserGroupRef> groupRefs) {
+        this.groupRefs = groupRefs;
+    }
+
+    public void addGroupRef(UserGroupRef groupRef) {
+        if (this.groupRefs == null) {
+            this.groupRefs = new HashSet<UserGroupRef>();
+        }
+        this.groupRefs.add(groupRef);
+    }
+
+    /*public Set<UserGroup> getGroups() {
         return groups;
     }
 
@@ -60,7 +80,7 @@ public class User extends AbstractEntity {
             this.groups = new HashSet<UserGroup>();
         }
         this.groups.add(group);
-    }
+    }*/
 
     public Integer getAge() {
         return age;

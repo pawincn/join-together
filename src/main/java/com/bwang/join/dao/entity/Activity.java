@@ -1,5 +1,8 @@
 package com.bwang.join.dao.entity;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -20,7 +23,7 @@ public class Activity extends AbstractEntity {
     private String description;
 
     @ManyToOne
-    // @Fetch(FetchMode.SELECT)
+//    @Fetch(FetchMode.SELECT)
     @JoinColumn(name = "restriction_id", nullable = true)
     private ActivityRestriction restriction;
 
