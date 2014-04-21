@@ -13,26 +13,21 @@ import java.util.Date;
 
 /**
  * Author: Brian Wang
- * Date: 4/7/14 12:28 AM
+ * Date: 4/21/14 5:07 PM
  */
 @Entity
-@Table(name = "activity_invitees")
-public class ActivityInvitee extends AbstractEntity {
+@Table(name = "activity_joiners")
+public class ActivityJoiner extends AbstractEntity {
     @ManyToOne
     @JoinColumn(name = "activity_id", nullable = false)
     private Activity activity;
 
     @OneToOne
     @Fetch(FetchMode.SELECT)
-    @JoinColumn(name = "invitee_id")
-    private User invitee;
+    @JoinColumn(name = "joiner_id")
+    private User joiner;
 
-    @OneToOne
-    @Fetch(FetchMode.SELECT)
-    @JoinColumn(name = "invited_group_id")
-    private UserGroup invitedGroup;
-
-    @Column(name = "invite_time")
+    @Column(name = "join_time")
     private Date invitedTime;
 
     public Activity getActivity() {
@@ -43,20 +38,12 @@ public class ActivityInvitee extends AbstractEntity {
         this.activity = activity;
     }
 
-    public User getInvitee() {
-        return invitee;
+    public User getJoiner() {
+        return joiner;
     }
 
-    public void setInvitee(User invitee) {
-        this.invitee = invitee;
-    }
-
-    public UserGroup getInvitedGroup() {
-        return invitedGroup;
-    }
-
-    public void setInvitedGroup(UserGroup invitedGroup) {
-        this.invitedGroup = invitedGroup;
+    public void setJoiner(User joiner) {
+        this.joiner = joiner;
     }
 
     public Date getInvitedTime() {

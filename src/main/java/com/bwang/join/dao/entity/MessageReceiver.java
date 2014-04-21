@@ -2,6 +2,7 @@ package com.bwang.join.dao.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -13,12 +14,28 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "message_receivers")
 public class MessageReceiver extends AbstractEntity {
-    @OneToOne(targetEntity = User.class)
+    @OneToOne
+    @JoinColumn(name = "receiver_id")
     private User receiver;
-    @ManyToOne(targetEntity = Message.class)
+
+    @ManyToOne
+    @JoinColumn(name = "message_id")
     private Message message;
+
     @Column(name = "is_read")
     private boolean isRead;
+
+    public MessageReceiver() {}
+
+    public MessageReceiver(Message msg, User receiver) {
+        this(msg, receiver, false);
+    }
+
+    public MessageReceiver(Message msg, User receiver, boolean isRead) {
+        this.message = msg;
+        this.receiver = receiver;
+        this.isRead = isRead;
+    }
 
     public User getReceiver() {
         return receiver;

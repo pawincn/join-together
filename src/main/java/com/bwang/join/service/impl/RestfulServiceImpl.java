@@ -2,9 +2,13 @@ package com.bwang.join.service.impl;
 
 import com.bwang.join.dao.EntityDao;
 import com.bwang.join.dao.entity.Activity;
+import com.bwang.join.dao.entity.ActivityInvitee;
+import com.bwang.join.dao.entity.ActivityJoiner;
 import com.bwang.join.dao.entity.ActivityLocation;
 import com.bwang.join.dao.entity.ActivityRecurringSetting;
 import com.bwang.join.dao.entity.ActivityRestriction;
+import com.bwang.join.dao.entity.Message;
+import com.bwang.join.dao.entity.MessageReceiver;
 import com.bwang.join.dao.entity.User;
 import com.bwang.join.dao.entity.UserGroup;
 import com.bwang.join.dao.entity.UserGroupRef;
@@ -92,14 +96,21 @@ public class RestfulServiceImpl implements RestfulService {
     }
 
     @Override
-    public List<User> findActivityParticipants(Long activityId) {
-        Activity activity = entityDao.findById(Activity.class, activityId);
-        return entityDao.findActivityParticipants(activity);
+    @Transactional(readOnly = true)
+    public List<ActivityInvitee> findActivityInvitees(Long activityId) {
+        return entityDao.findActivityInvitees(activityId);
     }
 
     @Override
-    public void sendMessage() {
+    @Transactional(readOnly = true)
+    public List<ActivityJoiner> findActivityJoiners(Long activityId) {
+        return entityDao.findActivityJoiners(activityId);
+    }
 
+    @Override
+    @Transactional
+    public void sendMessage(Message message, Set<User> receivers) {
+        entityDao.sendMessage(message, receivers);
     }
 
 }

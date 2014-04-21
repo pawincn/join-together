@@ -2,6 +2,10 @@ package com.bwang.join.dao;
 
 import com.bwang.join.dao.entity.AbstractEntity;
 import com.bwang.join.dao.entity.Activity;
+import com.bwang.join.dao.entity.ActivityInvitee;
+import com.bwang.join.dao.entity.ActivityJoiner;
+import com.bwang.join.dao.entity.Message;
+import com.bwang.join.dao.entity.MessageReceiver;
 import com.bwang.join.dao.entity.User;
 import com.bwang.join.dao.entity.UserGroup;
 import com.bwang.join.dao.entity.UserGroupRef;
@@ -41,16 +45,19 @@ public class EntityDao {
      * Get always hit DB, load just return a fake instance with given id.
      * Also parametrize the class type.
      */
+    @SuppressWarnings("unchecked")
     public <T> T findById(Class<T> clazz, Long id) {
         return (T) getSession().get(clazz, id);
     }
 
+    @SuppressWarnings("unchecked")
     public User findUserByEmail(String email) {
         List<User> users = getSession().createCriteria(User.class)
                 .add(Restrictions.eq("email", email)).list();
         return CollectionUtils.isEmpty(users) ? null : users.get(0);
     }
 
+    @SuppressWarnings("unchecked")
     public Set<UserGroup> findUserGroupsByUserEmail(String email) {
         User user = findUserByEmail(email);
         List<UserGroupRef> groupRefs = getSession().createCriteria(UserGroupRef.class)
@@ -65,19 +72,42 @@ public class EntityDao {
         return groups;
     }
 
+    @SuppressWarnings("unchecked")
     public UserGroup findUserGroupByName(String groupName) {
         List<UserGroup> groups = getSession().createCriteria(UserGroup.class)
                 .add(Restrictions.eq("groupName", groupName)).list();
         return CollectionUtils.isEmpty(groups) ? null : groups.get(0);
     }
 
+    @SuppressWarnings("unchecked")
     public List<Activity> findActivitiesByTitle(String activityTitle) {
-        List<Activity> activities = getSession().createCriteria(Activity.class)
+        return getSession().createCriteria(Activity.class)
                 .add(Restrictions.eq("title", activityTitle)).list();
-        return activities;
     }
 
-    public List<User> findActivityParticipants(Activity activity) {
-        return null;
+    @SuppressWarnings("unchecked")
+    public List<ActivityInvitee> findActivityInvitees(Long activityId) {
+        Activity activity = findById(Activity.class, activityId);
+        return getSession().createCriteria(ActivityInvitee.class)
+                .add(Restrictions.eq("activity", activity)).list();
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<ActivityJoiner> findActivityJoiners(Long activityId) {
+        Activity activity = findById(Activity.class, activityId);
+        // below method should work if fetch mode is JOIN
+        // return activity.getJoiners();
+
+        return getSession().createCriteria(ActivityJoiner.class)
+                .add(Restrictions.eq("activity", activity)).list();
+    }
+
+    public void sendMessage(Message message, Set<User> receivers) {
+        save(message);
+        if (!CollectionUtils.isEmpty(receivers)) {
+            for (User receiver : receivers) {
+                save(new MessageReceiver(message, receiver));
+            }
+        }
     }
 }

@@ -1,9 +1,13 @@
 package com.bwang.join.service;
 
 import com.bwang.join.dao.entity.Activity;
+import com.bwang.join.dao.entity.ActivityInvitee;
+import com.bwang.join.dao.entity.ActivityJoiner;
 import com.bwang.join.dao.entity.ActivityLocation;
 import com.bwang.join.dao.entity.ActivityRecurringSetting;
 import com.bwang.join.dao.entity.ActivityRestriction;
+import com.bwang.join.dao.entity.Message;
+import com.bwang.join.dao.entity.MessageReceiver;
 import com.bwang.join.dao.entity.User;
 import com.bwang.join.dao.entity.UserGroup;
 import com.bwang.join.dao.entity.UserGroupRef;
@@ -14,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -157,4 +162,26 @@ public class RestfulServiceTestCase {
         }
     }
 
+    @Test
+    public void testFindActivityInvitees() {
+        List<ActivityInvitee> invitees = service.findActivityInvitees(2l);
+        assertNotNull(invitees);
+    }
+
+    @Test
+    public void testFindActivityJoiners() {
+        List<ActivityJoiner> joiners = service.findActivityJoiners(2l);
+        assertNotNull(joiners);
+    }
+
+    @Test
+    public void testSendMessage() {
+        Message msg = new Message();
+        msg.setMessage("Some funny news from Brian...");
+
+        Set<User> receivers = new HashSet<>();
+        receivers.add(service.findUserByEmail(TEST_USER_EMAIL));
+
+        service.sendMessage(msg, receivers);
+    }
 }

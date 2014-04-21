@@ -1,9 +1,13 @@
 package com.bwang.join.service;
 
 import com.bwang.join.dao.entity.Activity;
+import com.bwang.join.dao.entity.ActivityInvitee;
+import com.bwang.join.dao.entity.ActivityJoiner;
 import com.bwang.join.dao.entity.ActivityLocation;
 import com.bwang.join.dao.entity.ActivityRecurringSetting;
 import com.bwang.join.dao.entity.ActivityRestriction;
+import com.bwang.join.dao.entity.Message;
+import com.bwang.join.dao.entity.MessageReceiver;
 import com.bwang.join.dao.entity.User;
 import com.bwang.join.dao.entity.UserGroup;
 import com.bwang.join.dao.entity.UserGroupRef;
@@ -28,7 +32,8 @@ public interface RestfulService {
     public void saveActivityLocation(ActivityLocation location);
     public void saveActivity(Activity activity);
     public List<Activity> findActivitiesByTitle(String activityName);
-    public List<User> findActivityParticipants(Long activityId);
+    public List<ActivityInvitee> findActivityInvitees(Long activityId);
+    public List<ActivityJoiner> findActivityJoiners(Long activityId);
 
-    public void sendMessage();
+    public void sendMessage(Message message, Set<User> receivers);
 }

@@ -22,13 +22,17 @@ public class Message extends AbstractEntity {
     private String message;
     @Column(name = "send_time")
     private DateTime sendTime;
-    @OneToOne(targetEntity = User.class)
+
+    @OneToOne
+    @JoinColumn(name = "sender_id")
     private User sender;
+
     @ManyToOne
     @JoinColumn(name = "activity_id", nullable = true)
     private Activity activity;
-    @OneToMany(targetEntity = MessageReceiver.class)
-    private Set<User> receivers;
+
+    @OneToMany(mappedBy = "message")
+    private Set<MessageReceiver> receivers;
 
     public String getMessage() {
         return message;
@@ -62,11 +66,11 @@ public class Message extends AbstractEntity {
         this.sender = sender;
     }
 
-    public Set<User> getReceivers() {
+    public Set<MessageReceiver> getReceivers() {
         return receivers;
     }
 
-    public void setReceivers(Set<User> receivers) {
+    public void setReceivers(Set<MessageReceiver> receivers) {
         this.receivers = receivers;
     }
 }

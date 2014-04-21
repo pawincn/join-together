@@ -7,8 +7,10 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.util.Set;
 
 /**
  * Author: Brian Wang
@@ -32,8 +34,33 @@ public class Activity extends AbstractEntity {
     private ActivityLocation location;
 
     @OneToOne
+    @Fetch(FetchMode.SELECT)
     @JoinColumn(name = "organizer_id", nullable = true)
     private User organizer;
+
+    @OneToMany(mappedBy = "activity")
+    @Fetch(FetchMode.SELECT)
+    private Set<ActivityInvitee> invitees;
+
+    @OneToMany(mappedBy = "activity")
+    @Fetch(FetchMode.SELECT)
+    private Set<ActivityJoiner> joiners;
+
+    public Set<ActivityJoiner> getJoiners() {
+        return joiners;
+    }
+
+    public void setJoiners(Set<ActivityJoiner> joiners) {
+        this.joiners = joiners;
+    }
+
+    public Set<ActivityInvitee> getInvitees() {
+        return invitees;
+    }
+
+    public void setInvitees(Set<ActivityInvitee> invitees) {
+        this.invitees = invitees;
+    }
 
     public User getOrganizer() {
         return organizer;
