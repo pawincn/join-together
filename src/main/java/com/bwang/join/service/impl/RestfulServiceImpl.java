@@ -1,5 +1,6 @@
 package com.bwang.join.service.impl;
 
+import com.bwang.join.controller.dto.UserDto;
 import com.bwang.join.dao.EntityDao;
 import com.bwang.join.dao.entity.Activity;
 import com.bwang.join.dao.entity.ActivityInvitee;
@@ -8,7 +9,6 @@ import com.bwang.join.dao.entity.ActivityLocation;
 import com.bwang.join.dao.entity.ActivityRecurringSetting;
 import com.bwang.join.dao.entity.ActivityRestriction;
 import com.bwang.join.dao.entity.Message;
-import com.bwang.join.dao.entity.MessageReceiver;
 import com.bwang.join.dao.entity.User;
 import com.bwang.join.dao.entity.UserGroup;
 import com.bwang.join.dao.entity.UserGroupRef;
@@ -31,14 +31,15 @@ public class RestfulServiceImpl implements RestfulService {
 
     @Override
     @Transactional
-    public void saveUser(User user) {
-        entityDao.save(user);
+    public void saveUser(UserDto user) {
+        entityDao.save(new User(user));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public User findUserByEmail(String email) {
-        return entityDao.findUserByEmail(email);
+    public UserDto findUserByEmail(String email) {
+        User user = entityDao.findUserByEmail(email);
+        return user == null ? null : user.toUserDto();
     }
 
     @Override

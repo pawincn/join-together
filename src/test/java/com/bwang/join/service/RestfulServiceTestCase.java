@@ -1,11 +1,13 @@
 package com.bwang.join.service;
 
+import com.bwang.join.controller.dto.UserDto;
 import com.bwang.join.dao.entity.Activity;
 import com.bwang.join.dao.entity.ActivityInvitee;
 import com.bwang.join.dao.entity.ActivityJoiner;
 import com.bwang.join.dao.entity.ActivityLocation;
 import com.bwang.join.dao.entity.ActivityRecurringSetting;
 import com.bwang.join.dao.entity.ActivityRestriction;
+import com.bwang.join.dao.entity.GenderEnum;
 import com.bwang.join.dao.entity.Message;
 import com.bwang.join.dao.entity.MessageReceiver;
 import com.bwang.join.dao.entity.User;
@@ -42,7 +44,7 @@ public class RestfulServiceTestCase {
 
     @Test
     public void testSaveUser() {
-        User user = new User();
+        UserDto user = new UserDto();
         user.setFirstName("Dou");
         user.setLastName("Wang");
         user.setEmail(TEST_USER_EMAIL);
@@ -51,7 +53,7 @@ public class RestfulServiceTestCase {
 
     @Test
     public void testFindUserByEmail() {
-        User user = service.findUserByEmail(TEST_USER_EMAIL);
+        UserDto user = service.findUserByEmail(TEST_USER_EMAIL);
         assertEquals(TEST_USER_EMAIL, user.getEmail());
 
     }
@@ -87,9 +89,9 @@ public class RestfulServiceTestCase {
 
     @Test
     public void testSaveUserGroupRef() {
-        User user = service.findUserByEmail(TEST_USER_EMAIL);
+        UserDto user = service.findUserByEmail(TEST_USER_EMAIL);
         UserGroup group = service.findUserGroupByName(TEST_GROUP_NAME);
-        UserGroupRef ref = new UserGroupRef(user, group);
+        UserGroupRef ref = new UserGroupRef(new User(user), group);
         service.saveUserGroupRef(ref);
     }
 
@@ -100,7 +102,7 @@ public class RestfulServiceTestCase {
         restriction.setMaxAge(60);
         restriction.setMinAge(16);
         restriction.setParticipantCountMax(100);
-        restriction.setParticipantGender(ActivityRestriction.GenderEnum.Female);
+        restriction.setParticipantGender(GenderEnum.Female);
         restriction.setStartTime(new Date());
 //        restriction.setStartTime(DateTime.now().plusHours(1));
         service.saveActivityRestriction(restriction);
@@ -142,8 +144,8 @@ public class RestfulServiceTestCase {
         service.saveActivityLocation(location);
         activity.setLocation(location);
 
-        User organizer = service.findUserByEmail(TEST_USER_EMAIL);
-        activity.setOrganizer(organizer);
+        UserDto organizer = service.findUserByEmail(TEST_USER_EMAIL);
+        activity.setOrganizer(new User(organizer));
 
         service.saveActivity(activity);
     }
@@ -180,7 +182,7 @@ public class RestfulServiceTestCase {
         msg.setMessage("Some funny news from Brian...");
 
         Set<User> receivers = new HashSet<>();
-        receivers.add(service.findUserByEmail(TEST_USER_EMAIL));
+        receivers.add(new User(service.findUserByEmail(TEST_USER_EMAIL)));
 
         service.sendMessage(msg, receivers);
     }

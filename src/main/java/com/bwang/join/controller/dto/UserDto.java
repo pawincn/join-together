@@ -1,14 +1,11 @@
 package com.bwang.join.controller.dto;
 
-import com.bwang.join.dao.entity.User;
-
-import javax.xml.bind.annotation.XmlRootElement;
-
 /**
  * Author: Brian Wang
  * Date: 4/23/14 8:44 PM
  */
 public class UserDto {
+    private Long id;
     private String nickName;
     private String firstName;
     private String lastName;
@@ -21,16 +18,12 @@ public class UserDto {
 
     public UserDto() {}
 
-    public UserDto(User user) {
-        this.nickName = user.getNickName();
-        this.firstName = user.getFirstName();
-        this.lastName = user.getLastName();
-        this.gender = user.getGender() == null ? null : user.getGender().name();
-        this.age = user.getAge();
-        this.email = user.getEmail();
-        this.mobile = user.getMobileNumber();
-        this.wechat = user.getWechatId();
-        this.weibo = user.getWeiboId();
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getWeibo() {

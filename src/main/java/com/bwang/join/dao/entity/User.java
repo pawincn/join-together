@@ -1,10 +1,13 @@
 package com.bwang.join.dao.entity;
 
+import com.bwang.join.controller.dto.UserDto;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -26,8 +29,11 @@ public class User extends AbstractEntity {
     private String firstName;
     @Column(name = "last_name")
     private String lastName;
+
     @Column(name = "gender")
-    private Integer gender;
+    @Enumerated(EnumType.ORDINAL)
+    private GenderEnum gender;
+
     @Column(name = "age")
     private Integer age;
     @Column(name = "email")
@@ -40,17 +46,33 @@ public class User extends AbstractEntity {
     private String weiboId;
 
     /*@ManyToMany
-    @Fetch(FetchMode.SELECT)  // todo default the value later
+    @Fetch(FetchMode.SELECT)
     @JoinTable(
             name = "user_group_xref",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "group_id")
     )
     private Set<UserGroup> groups;*/
-
     @OneToMany(mappedBy = "user")
     @Fetch(FetchMode.SELECT)
     private Set<UserGroupRef> groupRefs;
+
+    public User() {}
+
+    public User(UserDto dto) {
+        this.setId(dto.getId());
+        this.setNickName(dto.getNickName());
+        this.setFirstName(dto.getFirstName());
+        this.setLastName(dto.getLastName());
+        GenderEnum gender = dto.getGender() == null ?
+                null : GenderEnum.valueOf(dto.getGender());
+        this.setGender(gender);
+        this.setAge(dto.getAge());
+        this.setEmail(dto.getEmail());
+        this.setMobileNumber(dto.getMobile());
+        this.setWechatId(dto.getWechat());
+        this.setWeiboId(dto.getWeibo());
+    }
 
     public Set<UserGroupRef> getGroupRefs() {
         return groupRefs;
@@ -66,21 +88,6 @@ public class User extends AbstractEntity {
         }
         this.groupRefs.add(groupRef);
     }
-
-    /*public Set<UserGroup> getGroups() {
-        return groups;
-    }
-
-    public void setGroups(Set<UserGroup> groups) {
-        this.groups = groups;
-    }
-
-    public void addGroup(UserGroup group) {
-        if (this.groups == null) {
-            this.groups = new HashSet<UserGroup>();
-        }
-        this.groups.add(group);
-    }*/
 
     public Integer getAge() {
         return age;
@@ -106,11 +113,11 @@ public class User extends AbstractEntity {
         this.firstName = firstName;
     }
 
-    public Integer getGender() {
+    public GenderEnum getGender() {
         return gender;
     }
 
-    public void setGender(Integer gender) {
+    public void setGender(GenderEnum gender) {
         this.gender = gender;
     }
 
@@ -152,5 +159,20 @@ public class User extends AbstractEntity {
 
     public void setWeiboId(String weiboId) {
         this.weiboId = weiboId;
+    }
+
+    public UserDto toUserDto() {
+        UserDto dto = new UserDto();
+        dto.setId(this.getId());
+        dto.setNickName(this.getNickName());
+        dto.setFirstName(this.getFirstName());
+        dto.setLastName(this.getLastName());
+        dto.setGender(this.getGender() == null ? null : this.getGender().name());
+        dto.setAge(this.getAge());
+        dto.setEmail(this.getEmail());
+        dto.setMobile(this.getMobileNumber());
+        dto.setWechat(this.getWechatId());
+        dto.setWeibo(this.getWeiboId());
+        return dto;
     }
 }

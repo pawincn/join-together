@@ -40,11 +40,6 @@ public class ActivityRestriction extends AbstractEntity {
     @JoinColumn(name = "recurring_setting_id", nullable = true)
     private ActivityRecurringSetting recurringSetting;
 
-    public enum GenderEnum {
-        Male,
-        Female
-    }
-
     public ActivityRecurringSetting getRecurringSetting() {
         return recurringSetting;
     }

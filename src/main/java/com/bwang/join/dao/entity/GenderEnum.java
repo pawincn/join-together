@@ -4,5 +4,7 @@ package com.bwang.join.dao.entity;
  * Author: Brian Wang
  * Date: 4/23/14 9:09 PM
  */
-public class GenderEnum {
+public enum GenderEnum {
+    Male,
+    Female;
 }

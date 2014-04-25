@@ -1,5 +1,6 @@
 package com.bwang.join.service;
 
+import com.bwang.join.controller.dto.UserDto;
 import com.bwang.join.dao.entity.Activity;
 import com.bwang.join.dao.entity.ActivityInvitee;
 import com.bwang.join.dao.entity.ActivityJoiner;
@@ -20,8 +21,8 @@ import java.util.Set;
  * Time: 2/2/14 9:56 PM
  */
 public interface RestfulService {
-    public void saveUser(User user);
-    public User findUserByEmail(String email);
+    public void saveUser(UserDto user);
+    public UserDto findUserByEmail(String email);
     public void saveUserGroup(UserGroup group);
     public UserGroup findUserGroupByName(String groupName);
     public Set<UserGroup> findUserGroupsByUserEmail(String email);
