@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 @RequestMapping("/participant")
-public class ParticipantController {
+public class UserController {
     @Autowired private RestfulService service;
 
     @RequestMapping(value = "{id}", method = RequestMethod.GET)
