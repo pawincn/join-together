@@ -1,5 +1,6 @@
 package com.bwang.join.dao.entity;
 
+import com.bwang.join.controller.dto.ActivityDto;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -45,6 +46,14 @@ public class Activity extends AbstractEntity {
     @OneToMany(mappedBy = "activity")
     @Fetch(FetchMode.SELECT)
     private Set<ActivityJoiner> joiners;
+
+    public Activity() {}
+
+    public Activity(ActivityDto dto) {
+        this.setId(dto.getId());
+        this.setTitle(dto.getTitle());
+        this.setDescription(dto.getDesc());
+    }
 
     public Set<ActivityJoiner> getJoiners() {
         return joiners;
@@ -100,5 +109,48 @@ public class Activity extends AbstractEntity {
 
     public void setLocation(ActivityLocation location) {
         this.location = location;
+    }
+
+    public ActivityDto toActivityDto() {
+        ActivityDto dto = new ActivityDto();
+        dto.setId(this.getId());
+        dto.setTitle(this.getTitle());
+        dto.setDesc(this.getDescription());
+        // add activities other info into DTO
+        ActivityLocation loc = this.getLocation();
+        if (loc != null) {
+            dto.setLongitude(loc.getLongitude());
+            dto.setLatitude(loc.getLatitude());
+            dto.setAddress(loc.getAddress());
+            dto.setCity(loc.getCity());
+            dto.setProvince(loc.getProvince());
+            dto.setCountry(loc.getCountry());
+        }
+        ActivityRestriction res = this.getRestriction();
+        if (res != null) {
+            dto.setDistanceInKm(res.getDistance());
+            dto.setParticipantMax(res.getParticipantCountMax());
+            dto.setParticipantGender(
+                    res.getParticipantGender() == null ?
+                            null : res.getParticipantGender().name());
+            dto.setAgeMax(res.getAgeMax());
+            dto.setAgeMin(res.getAgeMin());
+            dto.setStartInMinutes(res.getStartInMinutes());
+            dto.setStartAtTime(res.getStartAtTime());
+            ActivityRecurringSetting set = res.getRecurringSetting();
+            if (set != null) {
+                dto.setStartTime(set.getStartTime());
+                dto.setRecurringEnd(set.getRecurringEnd());
+                dto.setMondaySupported(set.getMondaySupported());
+                dto.setTuesdaySupported(set.getTuesdaySupported());
+                dto.setWednesdaySupported(set.getWednesdaySupported());
+                dto.setThursdaySupported(set.getThursdaySupported());
+                dto.setFridaySupported(set.getFridaySupported());
+                dto.setSaturdaySupported(set.getSaturdaySupported());
+                dto.setSundaySupported(set.getSundaySupported());
+            }
+        }
+
+        return dto;
     }
 }

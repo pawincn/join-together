@@ -26,15 +26,15 @@ public class ActivityRestriction extends AbstractEntity {
     private GenderEnum participantGender;
 
     @Column(name = "age_range_max")
-    private Integer maxAge;
+    private Integer ageMax;
     @Column(name = "age_range_min")
-    private Integer minAge;
+    private Integer ageMin;
     @Column(name = "start_in_minutes")
     private Integer startInMinutes;
     @Column(name = "start_at_datetime")
 //    @Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
 //    @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-    private Date startTime;
+    private Date startAtTime;
 
     @ManyToOne
     @JoinColumn(name = "recurring_setting_id", nullable = true)
@@ -72,20 +72,20 @@ public class ActivityRestriction extends AbstractEntity {
         this.participantGender = participantGender;
     }
 
-    public Integer getMaxAge() {
-        return maxAge;
+    public Integer getAgeMax() {
+        return ageMax;
     }
 
-    public void setMaxAge(Integer maxAge) {
-        this.maxAge = maxAge;
+    public void setAgeMax(Integer ageMax) {
+        this.ageMax = ageMax;
     }
 
-    public Integer getMinAge() {
-        return minAge;
+    public Integer getAgeMin() {
+        return ageMin;
     }
 
-    public void setMinAge(Integer minAge) {
-        this.minAge = minAge;
+    public void setAgeMin(Integer ageMin) {
+        this.ageMin = ageMin;
     }
 
     public Integer getStartInMinutes() {
@@ -96,11 +96,11 @@ public class ActivityRestriction extends AbstractEntity {
         this.startInMinutes = startInMinutes;
     }
 
-    public Date getStartTime() {
-        return startTime;
+    public Date getStartAtTime() {
+        return startAtTime;
     }
 
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
+    public void setStartAtTime(Date startAtTime) {
+        this.startAtTime = startAtTime;
     }
 }

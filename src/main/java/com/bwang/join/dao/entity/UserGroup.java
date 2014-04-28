@@ -1,5 +1,6 @@
 package com.bwang.join.dao.entity;
 
+import com.bwang.join.controller.dto.GroupDto;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -31,6 +32,13 @@ public class UserGroup extends AbstractEntity {
     @Fetch(FetchMode.SELECT)
     private Set<UserGroupRef> userRefs;
 
+    public UserGroup() {}
+
+    public UserGroup(GroupDto groupDto) {
+        this.groupName = groupDto.getName();
+        this.groupDesc = groupDto.getDesc();
+    }
+
     public Set<UserGroupRef> getUserRefs() {
         return userRefs;
     }
@@ -46,14 +54,6 @@ public class UserGroup extends AbstractEntity {
         this.userRefs.add(userRef);
     }
 
-    /*public Set<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(Set<User> users) {
-        this.users = users;
-    }*/
-
     public String getGroupName() {
         return groupName;
     }
@@ -68,5 +68,13 @@ public class UserGroup extends AbstractEntity {
 
     public void setGroupDesc(String groupDesc) {
         this.groupDesc = groupDesc;
+    }
+
+    public GroupDto toGroupDto() {
+        GroupDto dto = new GroupDto();
+        dto.setId(this.getId());
+        dto.setName(this.getGroupName());
+        dto.setDesc(this.getGroupDesc());
+        return dto;
     }
 }

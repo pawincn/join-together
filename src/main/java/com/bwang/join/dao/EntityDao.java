@@ -1,9 +1,14 @@
 package com.bwang.join.dao;
 
+import com.bwang.join.controller.dto.ActivityDto;
 import com.bwang.join.dao.entity.AbstractEntity;
 import com.bwang.join.dao.entity.Activity;
 import com.bwang.join.dao.entity.ActivityInvitee;
 import com.bwang.join.dao.entity.ActivityJoiner;
+import com.bwang.join.dao.entity.ActivityLocation;
+import com.bwang.join.dao.entity.ActivityRecurringSetting;
+import com.bwang.join.dao.entity.ActivityRestriction;
+import com.bwang.join.dao.entity.GenderEnum;
 import com.bwang.join.dao.entity.Message;
 import com.bwang.join.dao.entity.MessageReceiver;
 import com.bwang.join.dao.entity.User;
@@ -41,6 +46,10 @@ public class EntityDao {
         getSession().saveOrUpdate(entity);
     }
 
+    public <T> T loadEntity(Class<T> clazz, Long id) {
+        return (T) getSession().load(clazz, id);
+    }
+
     /**
      * Get always hit DB, load just return a fake instance with given id.
      * Also parametrize the class type.
@@ -64,7 +73,7 @@ public class EntityDao {
                 .add(Restrictions.eq("user", user)).list();
         Set<UserGroup> groups = null;
         if (!CollectionUtils.isEmpty(groupRefs)) {
-            groups = new HashSet<>();
+            groups = new HashSet<UserGroup>();
             for (UserGroupRef ref : groupRefs) {
                 groups.add(ref.getGroup());
             }
@@ -89,17 +98,17 @@ public class EntityDao {
     public List<ActivityInvitee> findActivityInvitees(Long activityId) {
         Activity activity = findById(Activity.class, activityId);
         return getSession().createCriteria(ActivityInvitee.class)
-                .add(Restrictions.eq("activity", activity)).list();
+                .add(Restrictions.eq("dto", activity)).list();
     }
 
     @SuppressWarnings("unchecked")
     public List<ActivityJoiner> findActivityJoiners(Long activityId) {
         Activity activity = findById(Activity.class, activityId);
         // below method should work if fetch mode is JOIN
-        // return activity.getJoiners();
+        // return dto.getJoiners();
 
         return getSession().createCriteria(ActivityJoiner.class)
-                .add(Restrictions.eq("activity", activity)).list();
+                .add(Restrictions.eq("dto", activity)).list();
     }
 
     public void sendMessage(Message message, Set<User> receivers) {
@@ -110,4 +119,5 @@ public class EntityDao {
             }
         }
     }
+
 }

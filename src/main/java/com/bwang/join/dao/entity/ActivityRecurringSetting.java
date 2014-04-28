@@ -1,8 +1,5 @@
 package com.bwang.join.dao.entity;
 
-import org.joda.time.DateTime;
-import org.joda.time.LocalTime;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -20,19 +17,19 @@ public class ActivityRecurringSetting extends AbstractEntity {
     @Column(name = "recurring_end")
     private Date recurringEnd;
     @Column(name = "monday")
-    private boolean monday;
+    private Boolean mondaySupported;
     @Column(name = "tuesday")
-    private boolean tuesday;
+    private Boolean tuesdaySupported;
     @Column(name = "wednesday")
-    private boolean wednesday;
+    private Boolean wednesdaySupported;
     @Column(name = "thursday")
-    private boolean thursday;
+    private Boolean thursdaySupported;
     @Column(name = "friday")
-    private boolean friday;
+    private Boolean fridaySupported;
     @Column(name = "saturday")
-    private boolean saturday;
+    private Boolean saturdaySupported;
     @Column(name = "sunday")
-    private boolean sunday;
+    private Boolean sundaySupported;
 
     public String getStartTime() {
         return startTime;
@@ -50,59 +47,59 @@ public class ActivityRecurringSetting extends AbstractEntity {
         this.recurringEnd = recurringEnd;
     }
 
-    public boolean isMonday() {
-        return monday;
+    public Boolean getMondaySupported() {
+        return mondaySupported;
     }
 
-    public void setMonday(boolean monday) {
-        this.monday = monday;
+    public void setMondaySupported(Boolean mondaySupported) {
+        this.mondaySupported = mondaySupported;
     }
 
-    public boolean isTuesday() {
-        return tuesday;
+    public Boolean getTuesdaySupported() {
+        return tuesdaySupported;
     }
 
-    public void setTuesday(boolean tuesday) {
-        this.tuesday = tuesday;
+    public void setTuesdaySupported(Boolean tuesdaySupported) {
+        this.tuesdaySupported = tuesdaySupported;
     }
 
-    public boolean isWednesday() {
-        return wednesday;
+    public Boolean getWednesdaySupported() {
+        return wednesdaySupported;
     }
 
-    public void setWednesday(boolean wednesday) {
-        this.wednesday = wednesday;
+    public void setWednesdaySupported(Boolean wednesdaySupported) {
+        this.wednesdaySupported = wednesdaySupported;
     }
 
-    public boolean isThursday() {
-        return thursday;
+    public Boolean getThursdaySupported() {
+        return thursdaySupported;
     }
 
-    public void setThursday(boolean thursday) {
-        this.thursday = thursday;
+    public void setThursdaySupported(Boolean thursdaySupported) {
+        this.thursdaySupported = thursdaySupported;
     }
 
-    public boolean isFriday() {
-        return friday;
+    public Boolean getFridaySupported() {
+        return fridaySupported;
     }
 
-    public void setFriday(boolean friday) {
-        this.friday = friday;
+    public void setFridaySupported(Boolean fridaySupported) {
+        this.fridaySupported = fridaySupported;
     }
 
-    public boolean isSaturday() {
-        return saturday;
+    public Boolean getSaturdaySupported() {
+        return saturdaySupported;
     }
 
-    public void setSaturday(boolean saturday) {
-        this.saturday = saturday;
+    public void setSaturdaySupported(Boolean saturdaySupported) {
+        this.saturdaySupported = saturdaySupported;
     }
 
-    public boolean isSunday() {
-        return sunday;
+    public Boolean getSundaySupported() {
+        return sundaySupported;
     }
 
-    public void setSunday(boolean sunday) {
-        this.sunday = sunday;
+    public void setSundaySupported(Boolean sundaySupported) {
+        this.sundaySupported = sundaySupported;
     }
 }

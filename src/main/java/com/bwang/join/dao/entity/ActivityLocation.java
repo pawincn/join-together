@@ -1,5 +1,7 @@
 package com.bwang.join.dao.entity;
 
+import com.bwang.join.controller.dto.ActivityDto;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -23,6 +25,17 @@ public class ActivityLocation extends AbstractEntity {
     private String province;
     @Column(name = "country")
     private String country;
+
+    public ActivityLocation() {}
+
+    public ActivityLocation(ActivityDto dto) {
+        this.setLongitude(dto.getLongitude());
+        this.setLatitude(dto.getLatitude());
+        this.setAddress(dto.getAddress());
+        this.setCity(dto.getCity());
+        this.setProvince(dto.getProvince());
+        this.setCountry(dto.getCountry());
+    }
 
     public String getProvince() {
         return province;

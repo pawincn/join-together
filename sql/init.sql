@@ -58,13 +58,13 @@ create table activity_recurring_settings
   id bigint primary key auto_increment,
   start_time char(8),
   recurring_end datetime,
-  monday bool,
-  tuesday bool,
-  wednesday bool,
-  thursday bool,
-  friday bool,
-  saturday bool,
-  sunday bool
+  mondaySupported bool,
+  tuesdaySupported bool,
+  wednesdaySupported bool,
+  thursdaySupported bool,
+  fridaySupported bool,
+  saturdaySupported bool,
+  sundaySupported bool
 );
 
 create table activity_restrictions

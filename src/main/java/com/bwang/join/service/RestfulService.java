@@ -1,6 +1,10 @@
 package com.bwang.join.service;
 
+import com.bwang.join.controller.dto.ActivityDto;
+import com.bwang.join.controller.dto.GroupDto;
+import com.bwang.join.controller.dto.GroupUsersDto;
 import com.bwang.join.controller.dto.UserDto;
+import com.bwang.join.controller.dto.UserGroupsDto;
 import com.bwang.join.dao.entity.Activity;
 import com.bwang.join.dao.entity.ActivityInvitee;
 import com.bwang.join.dao.entity.ActivityJoiner;
@@ -12,6 +16,7 @@ import com.bwang.join.dao.entity.MessageReceiver;
 import com.bwang.join.dao.entity.User;
 import com.bwang.join.dao.entity.UserGroup;
 import com.bwang.join.dao.entity.UserGroupRef;
+import com.bwang.join.util.ServiceException;
 
 import java.util.List;
 import java.util.Set;
@@ -23,16 +28,17 @@ import java.util.Set;
 public interface RestfulService {
     public void saveUser(UserDto user);
     public UserDto findUserByEmail(String email);
-    public void saveUserGroup(UserGroup group);
-    public UserGroup findUserGroupByName(String groupName);
-    public Set<UserGroup> findUserGroupsByUserEmail(String email);
-    public void saveUserGroupRef(UserGroupRef ref);
+    public void saveGroup(GroupDto group);
+    public GroupDto findGroupByName(String groupName);
+    public Set<UserGroup> findGroupsByUserEmail(String email);
+    public void saveUserGroupRef(UserGroupsDto ref);
+    public void saveGroupUserRef(GroupUsersDto ref);
 
-    public void saveActivityRecurringSetting(ActivityRecurringSetting setting);
+    /*public void saveActivityRecurringSetting(ActivityRecurringSetting setting);
     public void saveActivityRestriction(ActivityRestriction restriction);
-    public void saveActivityLocation(ActivityLocation location);
-    public void saveActivity(Activity activity);
-    public List<Activity> findActivitiesByTitle(String activityName);
+    public void saveActivityLocation(ActivityLocation location);*/
+    public void saveActivity(ActivityDto activity) throws ServiceException;
+    public List<ActivityDto> findActivitiesByTitle(String activityName);
     public List<ActivityInvitee> findActivityInvitees(Long activityId);
     public List<ActivityJoiner> findActivityJoiners(Long activityId);
 
